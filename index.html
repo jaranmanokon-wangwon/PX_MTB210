@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<title>Digital Wallet</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- หน้าหลัก - ผู้ใช้งานทั่วไป -->
+<div class="container" id="page-home">
+  <div class="header">
+    <div class="rank-badge">💳</div>
+    <h1>DIGITAL WALLET</h1>
+    <div class="subtitle">Contactless Payment System</div>
+  </div>
+  
+  <div class="home-section">
+    <div class="section-title">ตรวจสอบยอดเงิน / CHECK BALANCE</div>
+    <div class="input-group">
+      <input type="text" id="check-id-card" class="login-input" maxlength="13" placeholder="กรอกเลขบัตรประชาชน 13 หลัก" autocomplete="off">
+    </div>
+    <button class="btn-check" id="check-balance-btn">
+      <span>🔍</span>
+      ตรวจสอบยอดเงิน
+    </button>
+    
+    <div class="balance-result" id="balance-result" style="display:none;">
+      <div class="result-icon">👤</div>
+      <div class="result-name" id="result-name">-</div>
+      <div class="result-balance-label">ยอดคงเหลือ</div>
+      <div class="result-balance" id="result-balance">0 บาท</div>
+      <div class="result-uid" id="result-uid">UID: -</div>
+    </div>
+    
+    <div class="error-message" id="check-error"></div>
+  </div>
+  
+  <div class="divider"></div>
+  
+  <button class="btn-staff-login" id="staff-login-btn">
+    🔐 เข้าสู่ระบบพนักงาน / Staff Login
+  </button>
+</div>
+
+<!-- หน้าเข้าสู่ระบบพนักงาน -->
+<div class="container" id="page-login" style="display:none;">
+  <div class="header">
+    <div class="rank-badge">🔐</div>
+    <h1>STAFF LOGIN</h1>
+    <div class="subtitle">System Authentication</div>
+  </div>
+  
+  <div class="login-form">
+    <div class="input-group">
+      <label class="input-label">เลขบัตรประชาชน / ID Card Number</label>
+      <input type="text" id="id-card-input" class="login-input" maxlength="13" placeholder="0 0000 00000 00 0" autocomplete="off">
+      <div class="input-hint">13 หลัก</div>
+    </div>
+    
+    <div class="input-group">
+      <label class="input-label">รหัสหลังบัตร / Laser Code</label>
+      <input type="password" id="laser-code-input" class="login-input" maxlength="12" placeholder="AA0000000000" autocomplete="off">
+      <div class="input-hint">12 หลัก</div>
+    </div>
+    
+    <button class="btn-login" id="login-btn">
+      <span>🔓</span>
+      เข้าสู่ระบบ
+      <div class="btn-sublabel">LOGIN</div>
+    </button>
+    
+    <div class="login-error" id="login-error"></div>
+    
+    <button class="btn-back-home" id="back-home-btn">
+      ← กลับหน้าหลัก
+    </button>
+  </div>
+</div>
+
+<!-- หน้าเมนูพนักงาน -->
+<div class="container" id="page-select" style="display:none;">
+  <div class="header">
+    <div class="rank-badge" id="staff-badge">💳</div>
+    <h1 id="staff-title">DIGITAL WALLET</h1>
+    <div class="subtitle" id="staff-role">Staff Panel</div>
+  </div>
+  
+  <div class="action-buttons" id="action-buttons">
+    <!-- ปุ่มจะถูกสร้างแบบ dynamic จาก JavaScript -->
+  </div>
+  
+  <button class="btn-logout" id="logout-btn">
+    ออกจากระบบ / LOGOUT
+  </button>
+</div>
+
+<!-- หน้าใส่จำนวนเงิน -->
+<div class="container" id="page-amount" style="display:none;">
+  <div class="header">
+    <h1 id="amount-title">AMOUNT</h1>
+  </div>
+  
+  <div class="display-screen">
+    <div class="display-label">จำนวนเงิน (บาท)</div>
+    <div class="display-value" id="display">0</div>
+  </div>
+  
+  <div class="numpad">
+    <button class="num-btn" data-num="1">1</button>
+    <button class="num-btn" data-num="2">2</button>
+    <button class="num-btn" data-num="3">3</button>
+    
+    <button class="num-btn" data-num="4">4</button>
+    <button class="num-btn" data-num="5">5</button>
+    <button class="num-btn" data-num="6">6</button>
+    
+    <button class="num-btn" data-num="7">7</button>
+    <button class="num-btn" data-num="8">8</button>
+    <button class="num-btn" data-num="9">9</button>
+    
+    <button class="num-btn clear" data-action="clear">C</button>
+    <button class="num-btn" data-num="0">0</button>
+    <button class="num-btn del" data-action="delete">⌫</button>
+  </div>
+  
+  <div class="control-buttons">
+    <button class="ctrl-btn back" data-action="back">
+      ← ย้อนกลับ
+    </button>
+    <button class="ctrl-btn confirm" data-action="confirm">
+      ✓ ยืนยัน
+    </button>
+  </div>
+</div>
+
+<!-- Overlay รอสแกน / แสดงข้อมูล -->
+<div id="overlay">
+  <div class="scan-container" id="scan-animation">
+    <div class="scan-ring"></div>
+    <div class="scan-ring"></div>
+    <div class="scan-ring"></div>
+    <div class="radar"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="card-icon">💳</div>
+    <div class="scan-line"></div>
+    <div class="corner-bracket top-left"></div>
+    <div class="corner-bracket top-right"></div>
+    <div class="corner-bracket bottom-left"></div>
+    <div class="corner-bracket bottom-right"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+  <div id="result-icon"></div>
+  <div id="overlay-text">รอสแกนบัตร...</div>
+  <div class="customer-info" id="customer-info" style="display:none;">
+    <!-- เนื้อหาจะถูกสร้างแบบ dynamic จาก JavaScript -->
+  </div>
+  <div class="spinner" id="spinner">
+    <div class="spinner-ring"></div>
+    <div class="spinner-ring"></div>
+    <div class="spinner-ring"></div>
+  </div>
+</div>
+
+<!-- Modal กรอกข้อมูลผู้ใช้ใหม่ -->
+<div id="new-user-modal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>📝 ลงทะเบียนผู้ใช้ใหม่</h2>
+      <p class="modal-subtitle">New User Registration</p>
+    </div>
+    
+    <div class="modal-body">
+      <div class="input-group">
+        <label class="input-label">เลขบัตรประชาชน / ID Card Number</label>
+        <input type="text" id="new-user-idcard" class="login-input" maxlength="13" placeholder="0 0000 00000 00 0" autocomplete="off">
+        <div class="input-hint">13 หลัก (ไม่บังคับ)</div>
+      </div>
+      
+      <div class="input-group">
+        <label class="input-label">ชื่อ-นามสกุล / Full Name <span class="required">*</span></label>
+        <input type="text" id="new-user-name" class="login-input" placeholder="ระบุชื่อ-นามสกุล" autocomplete="off">
+      </div>
+      
+      <div class="input-group">
+        <label class="input-label">เบอร์โทรศัพท์ / Phone Number <span class="required">*</span></label>
+        <input type="text" id="new-user-phone" class="login-input" maxlength="10" placeholder="0812345678" autocomplete="off">
+        <div class="input-hint">10 หลัก</div>
+      </div>
+      
+      <div class="input-group">
+        <label class="input-label">รูปภาพ / Photo</label>
+        <input type="file" id="new-user-image" class="file-input" accept="image/*">
+        <div class="input-hint">ไม่บังคับ (สูงสุด 2MB)</div>
+        <img id="image-preview" class="image-preview" style="display:none;" alt="Preview">
+      </div>
+      
+      <div class="input-group" id="amount-input-group" style="display:none;">
+        <label class="input-label">จำนวนเงินเริ่มต้น / Initial Amount</label>
+        <input type="text" id="new-user-amount" class="login-input" placeholder="0" autocomplete="off">
+        <div class="input-hint">ไม่บังคับ (บาท)</div>
+      </div>
+      
+      <div class="error-message" id="new-user-error"></div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="modal-btn cancel" id="cancel-new-user">
+        ยกเลิก
+      </button>
+      <button class="modal-btn confirm" id="save-new-user">
+        ✓ บันทึก
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
